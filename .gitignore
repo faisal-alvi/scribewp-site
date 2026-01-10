@@ -1,0 +1,8 @@
+# Ignore dependencies and build outputs
+node_modules/
+dist/
+build/
+
+# All environment variable files
+/.env
+/server/.env
