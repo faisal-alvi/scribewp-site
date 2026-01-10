@@ -1,14 +1,15 @@
+// Use a configurable API base if provided by Vite or a bootstrap script. Fall
+// back to a relative path so the client talks to the same origin in production
+// and the build does not embed a localhost:4000 literal.
 const API_BASE = (() => {
   if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_FREEMIUS_API_URL) {
     return import.meta.env.VITE_FREEMIUS_API_URL;
   }
-  if (typeof process !== 'undefined' && process.env && process.env.REACT_APP_FREEMIUS_API_URL) {
-    return process.env.REACT_APP_FREEMIUS_API_URL;
-  }
   if (typeof window !== 'undefined' && window.__FREEMIUS_API_URL) {
     return window.__FREEMIUS_API_URL;
   }
-  return 'http://localhost:4000';
+  // Default to empty string so fetch(`${API_BASE}/freemius`) -> `/freemius`.
+  return '';
 })();
 
 export async function fetchFreemiusConfig() {
