@@ -9,7 +9,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT;
 
 app.get('/', (req, res) => {
   res.send('Freemius proxy server — endpoints: GET /freemius, POST /create-checkout');
