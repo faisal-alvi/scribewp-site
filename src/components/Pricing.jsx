@@ -71,8 +71,8 @@ const Pricing = () => {
         // ignore URL errors
       }
 
-      // Use public plan ids returned by the server; fail if not provided.
-      const product_id = cfg && cfg.plans && cfg.plans.product_id ? cfg.plans.product_id : cfg && cfg.plans && cfg.plans.professional;
+      // Use public product id and plan ids returned by the server; fail if not provided.
+      const product_id = cfg && cfg.product_id ? cfg.product_id : null;
       const plan_id = cfg && cfg.plans && cfg.plans.professional ? cfg.plans.professional : null;
       if (!product_id || !plan_id) {
         toast({ title: 'Public plan configuration not available. Please configure public plan ids on the server.' });
@@ -183,7 +183,7 @@ const Pricing = () => {
                         setLoadingPlan(plan.name);
                         const cfg = await fetchFreemiusConfig();
                         const public_key = (cfg && cfg.public_key) ? cfg.public_key : null;
-                        const product_id = cfg && cfg.plans && cfg.plans.product_id ? cfg.plans.product_id : cfg && cfg.plans && cfg.plans.starter;
+                        const product_id = cfg && cfg.product_id ? cfg.product_id : null;
                         const plan_id = cfg && cfg.plans && cfg.plans.starter ? cfg.plans.starter : null;
                         if (!product_id || !plan_id) {
                           toast({ title: 'Public starter plan configuration not available. Please configure public plan ids on the server.' });

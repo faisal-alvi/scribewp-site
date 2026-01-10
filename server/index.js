@@ -19,6 +19,8 @@ app.get('/freemius', (req, res) => {
   // Only expose non-secret, public values to the frontend.
   res.json({
     public_key: process.env.FREEMIUS_PUBLIC_KEY || null,
+    // Public product id (non-secret numeric id) that the frontend can use.
+    product_id: process.env.FREEMIUS_PRODUCT_ID || process.env.FREEMIUS_PUBLIC_PRODUCT_ID || null,
     // Optional: expose public product/plan IDs for the UI to use. These
     // should be the non-secret IDs you want embedded in the frontend.
     plans: {
