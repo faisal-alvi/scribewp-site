@@ -60,6 +60,7 @@ const Pricing = () => {
     try {
       setLoadingPlan(planName);
       const cfg = await fetchFreemiusConfig();
+      console.debug('Freemius config (client):', cfg);
       const public_key = (cfg && cfg.public_key) ? cfg.public_key : null;
 
       // Add coupon to URL so it's visible as /?coupon=ScribeWPProfessionalFree
@@ -74,8 +75,11 @@ const Pricing = () => {
       // Use public product id and plan ids returned by the server; fail if not provided.
       const product_id = cfg && cfg.product_id ? cfg.product_id : null;
       const plan_id = cfg && cfg.plans && cfg.plans.professional ? cfg.plans.professional : null;
-      if (!product_id || !plan_id) {
-        toast({ title: 'Public plan configuration not available. Please configure public plan ids on the server.' });
+      const invalidProduct = !product_id || (typeof product_id !== 'string' && typeof product_id !== 'number');
+      const invalidPlan = !plan_id || (typeof plan_id !== 'string' && typeof plan_id !== 'number');
+      if (invalidProduct || invalidPlan) {
+        console.warn('Freemius config missing required ids:', { product_id, plan_id, cfg });
+        toast({ title: 'Public plan configuration missing. Check server /freemius response (product_id or plans.professional).' });
         return;
       }
 

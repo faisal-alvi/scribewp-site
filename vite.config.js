@@ -9,4 +9,10 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'),
     },
   },
+  server: {
+    proxy: {
+      '/freemius': 'http://localhost:4000',
+      '/create-checkout': 'http://localhost:4000',
+    },
+  },
 })

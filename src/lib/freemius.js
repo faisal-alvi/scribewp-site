@@ -1,7 +1,5 @@
-// Use a configurable API base if provided by Vite or a bootstrap script. Fall
-// back to a relative path so the client talks to the same origin in production
-// and the build does not embed a localhost:4000 literal.
-const API_BASE = (() => {
+// Falls back to relative path so Vite proxy handles it in dev and same-origin works in prod.
+export const API_BASE = (() => {
   if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_FREEMIUS_API_URL) {
     return import.meta.env.VITE_FREEMIUS_API_URL;
   }

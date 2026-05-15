@@ -1,3 +1,5 @@
+import { API_BASE } from './freemius.js';
+
 // Helper to dynamically load the Freemius checkout script and open the modal.
 async function loadFreemiusScript() {
   if (window.FS) return Promise.resolve();
@@ -26,7 +28,7 @@ export async function openFreemiusModal({ product_id, plan_id, public_key, image
   // Attempt to retrieve sandbox params from backend.
   let sandbox = null;
   try {
-    const res = await fetch('/freemius-sandbox');
+    const res = await fetch(`${API_BASE}/freemius-sandbox`);
     if (res.status === 200) sandbox = await res.json();
   } catch (err) {
     // ignore — sandbox is optional

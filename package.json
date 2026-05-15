@@ -5,6 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "vite --host :: --port 3000",
+    "dev:all": "concurrently \"npm run dev\" \"npm run server\"",
+    "server": "node server/index.js",
     "build": "if [ -f tools/generate-llms.js ]; then node tools/generate-llms.js; fi && vite build",
     "preview": "vite preview --host :: --port 3000"
   },
@@ -46,6 +48,7 @@
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
     "terser": "^5.37.0",
+    "concurrently": "^8.2.2",
     "vite": "^4.4.5"
   }
 }
