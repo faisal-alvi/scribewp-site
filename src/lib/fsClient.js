@@ -18,15 +18,6 @@ export async function openFreemiusModal({ product_id, plan_id, public_key, image
 
   if (!window.FS) throw new Error('Freemius FS object not available');
 
-  // Freemius SDK API: FS.Checkout.configure() — not `new FS.Checkout()`
-  // param is `plugin_id`, not `product_id`
-  const handler = window.FS.Checkout.configure({
-    plugin_id: String(product_id),
-    plan_id: String(plan_id),
-    public_key: String(public_key),
-    image: image || undefined,
-  });
-
   // Attempt to retrieve sandbox params from backend.
   let sandbox = null;
   try {
@@ -37,13 +28,19 @@ export async function openFreemiusModal({ product_id, plan_id, public_key, image
     console.warn('Could not fetch freemius sandbox params:', err);
   }
 
+  // Freemius SDK API: `new FS.Checkout({...})` — all options passed to constructor,
+  // then call handler.open() with no arguments.
   return new Promise((resolve) => {
-    handler.open({
-      ...(sandbox ? { sandbox } : {}),
+    const handler = new window.FS.Checkout({
+      plugin_id: String(product_id),
+      plan_id: String(plan_id),
+      public_key: String(public_key),
+      image: image || undefined,
       name: name || 'Product',
       licenses: licenses || 1,
       // Pass coupon in two common keys in case SDK expects one or the other
       ...(coupon ? { coupon, coupon_code: coupon } : {}),
+      ...(sandbox ? { sandbox } : {}),
       purchaseCompleted: (response) => {
         console.log('Freemius purchaseCompleted:', response);
       },
@@ -52,6 +49,7 @@ export async function openFreemiusModal({ product_id, plan_id, public_key, image
         resolve(response);
       },
     });
+    handler.open();
   });
 }
 
