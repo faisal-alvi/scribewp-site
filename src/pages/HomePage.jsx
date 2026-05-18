@@ -17,16 +17,20 @@ function useReveal() {
   }, []);
 }
 
+// Public (non-secret) fallback values — safe to embed in the frontend
+const FS_DEFAULTS = {
+  product_id: 22853,
+  public_key: 'pk_a0a6a928afafe321a8e858732beee',
+  plans: { starter: 38349, professional: 38350 },
+};
+
 async function handleFreemiusPlan(planKey) {
   try {
     const cfg = await fetchFreemiusConfig();
-    const public_key = cfg?.public_key ?? null;
-    const product_id = cfg?.product_id ?? null;
-    const plan_id = cfg?.plans?.[planKey] ?? null;
-    if (!product_id || !plan_id) {
-      console.warn('Freemius config missing ids:', { product_id, plan_id });
-      return;
-    }
+    // Fall back to hardcoded public values if server is unreachable
+    const product_id = cfg?.product_id ?? FS_DEFAULTS.product_id;
+    const public_key = cfg?.public_key ?? FS_DEFAULTS.public_key;
+    const plan_id = cfg?.plans?.[planKey] ?? FS_DEFAULTS.plans[planKey];
     await openFreemiusModal({ product_id, plan_id, public_key, name: 'ScribeWP', licenses: 1 });
   } catch (err) {
     console.error('Freemius error:', err);

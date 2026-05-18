@@ -18,8 +18,10 @@ export async function openFreemiusModal({ product_id, plan_id, public_key, image
 
   if (!window.FS) throw new Error('Freemius FS object not available');
 
-  const handler = new window.FS.Checkout({
-    product_id: String(product_id),
+  // Freemius SDK API: FS.Checkout.configure() — not `new FS.Checkout()`
+  // param is `plugin_id`, not `product_id`
+  const handler = window.FS.Checkout.configure({
+    plugin_id: String(product_id),
     plan_id: String(plan_id),
     public_key: String(public_key),
     image: image || undefined,
