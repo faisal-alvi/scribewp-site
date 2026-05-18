@@ -1,105 +1,58 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { toast } from '@/components/ui/use-toast';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import Icon from '@/lib/Icons';
 
-const Header = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const location = useLocation();
+function Logo({ size = 28 }) {
+  return (
+    <span className="brand-mark" style={{ width: size, height: size, fontSize: size * 0.53, borderRadius: size * 0.28 }}>S</span>
+  );
+}
 
-  const handleGetStarted = () => {
-    toast({
-      title: "🚧 This feature isn't implemented yet—but don't worry! You can request it in your next prompt! 🚀"
-    });
-  };
+export default function Header({ theme, onToggleTheme }) {
+  const [scrolled, setScrolled] = useState(false);
 
-  const isActive = (path) => location.pathname === path;
-
-  const navLinks = [
-    { name: 'Features', path: '/features' },
-    { name: 'How It Works', path: '/how-it-works' },
-    { name: 'Pricing', path: '/pricing' },
-    { name: 'About', path: '/about' },
-  ];
+  useEffect(() => {
+    const h = () => setScrolled(window.scrollY > 8);
+    h();
+    window.addEventListener('scroll', h, { passive: true });
+    return () => window.removeEventListener('scroll', h);
+  }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 z-50">
-      <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 lg:h-20">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">S</span>
-            </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              ScribeWP
-            </span>
-          </Link>
+    <nav className={`nav ${scrolled ? 'is-scrolled' : ''}`}>
+      <div className="container nav-inner">
+        <Link className="brand" to="/">
+          <Logo />
+          <span className="brand-name">ScribeWP</span>
+        </Link>
 
-          <div className="hidden lg:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link 
-                key={link.name} 
-                to={link.path}
-                className={`text-sm font-medium transition-colors hover:text-purple-600 ${
-                  isActive(link.path) ? 'text-purple-600 font-bold' : 'text-gray-600'
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
-          </div>
-
-          <div className="hidden lg:block">
-            <Button 
-              onClick={handleGetStarted}
-              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-2 rounded-lg shadow-lg shadow-purple-500/30 transition-all hover:shadow-xl hover:shadow-purple-500/40"
-            >
-              Get Started Free
-            </Button>
-          </div>
-
-          <button 
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 text-gray-600 hover:text-purple-600 transition-colors"
-          >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+        <div className="nav-links">
+          <a className="nav-link" href="#features">Features</a>
+          <a className="nav-link" href="#how">How it works</a>
+          <a className="nav-link" href="#pricing">Pricing</a>
+          <a className="nav-link" href="#testimonials">Customers</a>
         </div>
 
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden border-t border-gray-100"
-          >
-            <div className="py-4 space-y-3">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name} 
-                  to={link.path}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block w-full text-left px-4 py-2 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors font-medium"
-                >
-                  {link.name}
-                </Link>
-              ))}
-              <div className="px-4 pt-2">
-                <Button 
-                  onClick={handleGetStarted}
-                  className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-2 rounded-lg shadow-lg shadow-purple-500/30"
-                >
-                  Get Started Free
-                </Button>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </nav>
-    </header>
+        <div className="nav-actions">
+          <button className="icon-btn" onClick={onToggleTheme} title="Toggle theme" aria-label="Toggle theme">
+            {theme === 'dark' ? (
+              <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="8" cy="8" r="3" />
+                <path d="M8 1.5v1.5M8 13v1.5M1.5 8h1.5M13 8h1.5M3.5 3.5l1 1M11.5 11.5l1 1M3.5 12.5l1-1M11.5 4.5l1-1" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M13 9.4A5.6 5.6 0 016.6 3a5.6 5.6 0 100 11.2A5.6 5.6 0 0013 9.4z" />
+              </svg>
+            )}
+          </button>
+          <a className="btn btn-ghost" href="https://wordpress.org/plugins/scribewp" target="_blank" rel="noopener noreferrer">WordPress.org</a>
+          <a className="btn btn-primary" href="#pricing">
+            Install free
+            <Icon.Arrow className="btn-arrow" />
+          </a>
+        </div>
+      </div>
+    </nav>
   );
-};
-
-export default Header;
+}
